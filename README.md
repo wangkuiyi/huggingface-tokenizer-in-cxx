@@ -1,17 +1,9 @@
 # gpt2cpp
 
-Download the asset files from HuggingFace.
+This repository is a port of the HuggingFace tokenizers from Python into C++.
 
-```
-mkdir -p assets
-curl -L https://huggingface.co/gpt2/raw/main/vocab.json -o assets/vocab.json
-curl -L https://huggingface.co/gpt2/raw/main/tokenizer.json -o assets/tokenizer.json
-curl -L https://huggingface.co/gpt2/raw/main/merges.txt -o assets/merges.txt
-curl -L https://huggingface.co/gpt2/resolve/main/tf_model.h5 -o assets/tf_model.h5
-```
+The code of tokenizers has never been complex, the knowledge is. Please go through the following documents if you need the knowledge.
 
-Convert the file `vocab.json` into a C++ literal.
-
-```
- ./vocab-cxx.py assets/vocab.json > vocab.cc
-```
+1. [Unicode in C++ and Python](u.md)
+1. [Understanding HuggingFace Tokenizers](0.md)
+1. [Unicode-enabled Regular Expression in C++](1.md)

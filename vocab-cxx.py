@@ -2,7 +2,9 @@
 
 # This Python script converts the vocab.json file required by the GPT2
 # tokenizer into an unordered_map<string, int> literal.
-
+#
+#  ./vocab-cxx.py assets/vocab.json > vocab.cc
+#
 import sys
 import json
 
