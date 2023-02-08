@@ -112,7 +112,7 @@ We have `sizeof(c[0])==4` on Linux, macOS, and other POSIX-compatible systems. I
 | string type  | implementation | literal syntax |
 | ------------- | ------------- | -------------- |
 | `std::string`  | `/* std::basic_string<char> */`  | `s = "Hi 益"` |
-| `std::wstring`  | `/* std::basic_string<wchar_t> */` | `w = L'Hi益"` |
+| `std::wstring`  | `/* std::basic_string<wchar_t> */` | `w = L'Hi 益"` |
 
 We have `s.size()==6` because the UTF-i encoding of `"Hi 益"` takes 6 bytes. We have `w.size()==4` because it contains 4 Unicode codepoints.
 
