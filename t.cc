@@ -1,8 +1,11 @@
-// clang++ -std=c++20 ~/w/gpt2cpp/t.cc -o /tmp/t && /tmp/t
+// clang++ -std=c++20 ~/w/gpt2cpp/t.cc -I ~/w/re2/b/install/include -L ~/w/re2/b/install/lib -lre2 -o /tmp/t && /tmp/t
 #include <codecvt>
 #include <iostream>
 #include <string>
 #include <unordered_map>
+
+#include <re2/re2.h>
+#include <re2/stringpiece.h>
 
 std::wstring utf8_to_wstring(const std::string &str) {
   std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
@@ -35,8 +38,8 @@ def bytes_to_unicode():
     cs = [chr(n) for n in cs]
     return dict(zip(bs, cs))
 */
-void build_byte_to_utf8_map(std::unordered_map<uint8_t, wchar_t> *b2u,
-                            std::unordered_map<wchar_t, uint8_t> *u2b) {
+void build_byte_to_wchar_map(std::unordered_map<uint8_t, wchar_t> *b2u,
+			     std::unordered_map<wchar_t, uint8_t> *u2b) {
   auto _insert_range = [=](int start, int end) {
     for (int c = start; c <= end; c++) {
       b2u->insert({uint8_t(c), wchar_t(c)});
@@ -62,12 +65,30 @@ void build_byte_to_utf8_map(std::unordered_map<uint8_t, wchar_t> *b2u,
   }
 }
 
-int main() {
+void test_build_byte_to_wchar_map() {
   std::unordered_map<uint8_t, wchar_t> b2u;
   std::unordered_map<wchar_t, uint8_t> u2b;
-  build_byte_to_utf8_map(&b2u, &u2b);
+  build_byte_to_wchar_map(&b2u, &u2b);
   assert(b2u.size() == 256);
   assert(b2u[0] == 0x100);
   assert(u2b.size() == 256);
+}
+
+int main() {
+  test_build_byte_to_wchar_map();
+  
+  std::string w;
+  // std::string text = "we'd  annoyingly 顽皮";
+  std::string text = "A  B";
+  re2::StringPiece input(text);
+
+  RE2 re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
+  assert(re.ok());  // compiled; if not, see re.error();
+
+  std::string var;
+  int value;
+  while (RE2::FindAndConsume(&input, re, &w)) {
+    std::cout << "token=\"" << w << "\"" << std::endl;
+  }
   return 0;
 }
