@@ -1,6 +1,3 @@
-# curl -L https://huggingface.co/gpt2/raw/main/merges.txt -o /tmp/merges.txt
-# curl -L https://huggingface.co/gpt2/raw/main/vocab.json -o /tmp/vocab.json
-
 import regex as re
 import json
 
