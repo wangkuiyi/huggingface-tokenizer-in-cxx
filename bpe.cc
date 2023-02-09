@@ -1,12 +1,11 @@
 #include "bpe.h"
 
-
-std::wstring utf8_to_wstring(const std::string &str) {
+std::wstring utf8_to_wstring(const std::string& str) {
   std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
   return myconv.from_bytes(str);
 }
 
-std::string wstring_to_utf8(const std::wstring &str) {
+std::string wstring_to_utf8(const std::wstring& str) {
   std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
   return myconv.to_bytes(str);
 }
@@ -16,8 +15,8 @@ std::string utf8(wchar_t c) {
   return wstring_to_utf8(w);
 }
 
-void bytes_to_unicode(std::unordered_map<uint8_t, wchar_t> *b2u,
-		      std::unordered_map<wchar_t, uint8_t> *u2b) {
+void bytes_to_unicode(std::unordered_map<uint8_t, wchar_t>* b2u,
+                      std::unordered_map<wchar_t, uint8_t>* u2b) {
   auto _insert_range = [=](int start, int end) {
     for (int c = start; c <= end; c++) {
       b2u->insert({uint8_t(c), wchar_t(c)});
@@ -47,8 +46,8 @@ void bytes_to_unicode(std::unordered_map<uint8_t, wchar_t> *b2u,
 
 // Given a token as a UTF8 string, encode each byte into an wchar_t
 void byte_encode_token(const std::string& token,
-		       std::unordered_map<uint8_t, wchar_t>& b2u,
-		       std::wstring* result) {
+                       std::unordered_map<uint8_t, wchar_t>& b2u,
+                       std::wstring* result) {
   result->resize(0);
   for (char c : token) {
     wchar_t wc = b2u[uint8_t(c)];
@@ -62,22 +61,21 @@ void load_merge_rules(std::istream& ins, BPERanks* bpe_ranks) {
   std::string line;
   int n = 0;
   while (std::getline(ins, line)) {
-    if (n > 0) { // Skip the version comment.
-      int d = line.find(" "); // merges.txt file use ASCII space
+    if (n > 0) {               // Skip the version comment.
+      int d = line.find(" ");  // merges.txt file use ASCII space
       bpe_ranks->insert({{utf8_to_wstring(line.substr(0, d)),
-	    utf8_to_wstring(line.substr(d+1))},
-	  n-1});
+                          utf8_to_wstring(line.substr(d + 1))},
+                         n - 1});
     }
     n++;
   }
 }
 
 void get_pairs(const std::wstring& word,
-	       std::vector<std::pair<std::wstring, std::wstring> >* pairs) {
+               std::vector<std::pair<std::wstring, std::wstring>>* pairs) {
   pairs->clear();
 
-  if (word.size() < 2)
-    return;
+  if (word.size() < 2) return;
 
   wchar_t previous = word[0];
   for (int i = 1; i < word.size(); i++) {
@@ -86,80 +84,71 @@ void get_pairs(const std::wstring& word,
   }
 }
 
-void bpe(const std::wstring& token,
-	 BPERanks & bpe_ranks,
-	 std::vector<std::wstring> * result) {
-  std::set<int> merged; // records indices in pairs that were merged.
+void bpe(const std::wstring& token, BPERanks& bpe_ranks,
+         std::vector<std::wstring>* result) {
+  std::set<int> merged;  // records indices in pairs that were merged.
   auto _left = [](int i, std::set<int>& merged) {
-    for (int j = i-1; j >= -1; j--) {
-      if (merged.find(j) == merged.end())
-	return j;
+    for (int j = i - 1; j >= -1; j--) {
+      if (merged.find(j) == merged.end()) return j;
     }
     return -1;
   };
   auto _right = [](int i, int cap, std::set<int>& merged) {
-    for (int j = i+1; j< cap; j++) {
-      if (merged.find(j) == merged.end())
-	return j;
+    for (int j = i + 1; j < cap; j++) {
+      if (merged.find(j) == merged.end()) return j;
     }
     return cap;
   };
-  
-  std::vector<std::pair<std::wstring, std::wstring> > pairs;
+
+  std::vector<std::pair<std::wstring, std::wstring>> pairs;
   get_pairs(token, &pairs);
-  
+
   while (true) {
     int min_score = INT_MAX;
-    int to_merge = -1; // indices into pairs.
+    int to_merge = -1;  // indices into pairs.
 
     for (int i = 0; i < pairs.size(); ++i) {
-      if (merged.find(i) == merged.end()) { // pair i is not merged.
-	auto iter = bpe_ranks.find(pairs[i]);
-	int score = iter != bpe_ranks.end() ? iter->second : INT_MAX;
-	if (score < min_score) {
-	  min_score = score;
-	  to_merge = i;
-	}
+      if (merged.find(i) == merged.end()) {  // pair i is not merged.
+        auto iter = bpe_ranks.find(pairs[i]);
+        int score = iter != bpe_ranks.end() ? iter->second : INT_MAX;
+        if (score < min_score) {
+          min_score = score;
+          to_merge = i;
+        }
       }
     }
 
-    if (to_merge == -1)
-      break;
+    if (to_merge == -1) break;
 
     merged.insert(to_merge);
     std::wstring merge_into = pairs[to_merge].first + pairs[to_merge].second;
 
     int l = _left(to_merge, merged);
-    if (l >= 0)
-      pairs[l].second = merge_into;
+    if (l >= 0) pairs[l].second = merge_into;
     int r = _right(to_merge, pairs.size(), merged);
-    if (r < pairs.size())
-      pairs[r].first = merge_into;
-  } // end while (true)
+    if (r < pairs.size()) pairs[r].first = merge_into;
+  }  // end while (true)
 
   if (merged.size() == pairs.size())
     result->push_back(token);
   else {
     for (int i = 0; i < pairs.size(); ++i) {
       if (merged.find(i) == merged.end()) {
-	if (_left(i, merged) < 0)
-	  result->push_back(pairs[i].first);
-	result->push_back(pairs[i].second);
+        if (_left(i, merged) < 0) result->push_back(pairs[i].first);
+        result->push_back(pairs[i].second);
       }
     }
   }
 }
 
-void tokenize(const std::string& text,
-	      RE2& re,
-	      BPERanks& bpe_ranks,
-	      std::unordered_map<uint8_t, wchar_t> & b2u,
-	      std::vector<std::string>* result) {
+void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
+              std::unordered_map<uint8_t, wchar_t>& b2u,
+              std::vector<std::string>* result) {
   re2::StringPiece input(text);
   std::string token;
   while (RE2::FindAndConsume(&input, re, &token)) {
     std::wstring wtoken;
-    byte_encode_token(token,b2u,&wtoken);
+    byte_encode_token(token, b2u, &wtoken);
 
     std::vector<std::wstring> bpe_tokens;
     bpe(wtoken, bpe_ranks, &bpe_tokens);
@@ -169,4 +158,3 @@ void tokenize(const std::string& text,
     }
   }
 }
-

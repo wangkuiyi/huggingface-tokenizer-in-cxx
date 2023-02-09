@@ -1,9 +1,11 @@
 #include "bpe.h"
 
 void test_re2() {
-  RE2 re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
+  RE2 re(
+      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
+      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
-  
+
   std::string w;
   std::string text = "we'd annoyingly 顽皮";
   re2::StringPiece input(text);
@@ -68,8 +70,10 @@ void test_bpe() {
   assert(result == std::vector<std::wstring>({L"very"}));
 }
 
-void test_tokenize(){
-  RE2 re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
+void test_tokenize() {
+  RE2 re(
+      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
+      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   BPERanks bpe_ranks;
@@ -85,7 +89,6 @@ void test_tokenize(){
     std::cout << s << std::endl;
   }
 }
-
 
 int main() {
   test_bytes_to_unicode();
