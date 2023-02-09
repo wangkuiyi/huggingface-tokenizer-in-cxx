@@ -30,20 +30,17 @@ Please run the following commands to run the extracted 120-line Python tokenizer
 python bpe.py
 ```
 
-To build the C++ port, you will need to build Google/RE2, which supports Unicode regular expressions while'std::regex' does not.  I added RE2 as a git submdoule of this repo.
+To build the C++ port, you will need CMake.
 
 ```
-cmake -B build-re2 -S re2 -DCMAKE_INSTALL_PREFIX=build-re2/install
-Cmake --build build-re2 --target install
+cmake -B /tmp/b -S .
+Cmake --build /tmp/b
 ```
 
-Then you can build the C++ port of the BPE tokenizer and run the unit test.
+Then you can run the unit test.
 
 ```bash
-clang++ -std=c++20 src/bpe.cc src/bpe_test.cc \
-  -I build-re2/install/include \
-  -L build-re2/install/lib \
-  -lre2 -o /tmp/bpe && /tmp/bpe
+/tmp/b/bin/bpe_test
 ```
 
 All three of the above programs load the same `vocab.json` and `merges.txt` files, so they all work exactly like HuggingFace did when it trained and served the GPT2 model.
