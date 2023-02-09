@@ -21,7 +21,7 @@ To run HuggingFace vanilla BPE tokenzier for GPT2, run the following commands:
 
 ```bash
 pip install transformers
-python src/t.py
+python tool/t.py
 ```
 
 Please run the following commands to run the extracted 120-line Python tokenizer:
