@@ -58,21 +58,17 @@ class Tokenizer:
             bpe_merges = merges_handle.read().split("\n")[1:-1]
         bpe_merges = [tuple(merge.split()) for merge in bpe_merges]
         self.bpe_ranks = dict(zip(bpe_merges, range(len(bpe_merges))))
-        print(len(self.bpe_ranks))
 
     def bpe(self, token):
         if token in self.cache:
             return self.cache[token]
         word = tuple(token)
-        print(f"word = {word}")
         pairs = get_pairs(word)
-        print(f"pairs = {pairs}")
         if not pairs:
             return token
 
         while True:
             bigram = min(pairs, key=lambda pair: self.bpe_ranks.get(pair, float("inf")))
-            print(f"bigram = {bigram}")
             if bigram not in self.bpe_ranks:
                 break
             first, second = bigram
@@ -94,7 +90,6 @@ class Tokenizer:
                 else:
                     new_word.append(word[i])
                     i += 1
-                print(f"new_word = {new_word}")
 
             new_word = tuple(new_word)
             word = new_word
@@ -110,13 +105,10 @@ class Tokenizer:
         """Tokenize a string."""
         bpe_tokens = []
         for token in re.findall(self.pat, text):
-            print(f"Before token={token}")
             token = "".join(
                 self.byte_encoder[b] for b in token.encode("utf-8")
             )  # Maps all our bytes to unicode strings, avoiding control tokens of the BPE (spaces in our case)
-            print(f"After token={token}")
             bpe_tokens.extend(bpe_token for bpe_token in self.bpe(token).split(" "))
-            print(f"bpe_tokens={bpe_tokens}")
         return bpe_tokens
 
     def _convert_token_to_id(self, token):
@@ -128,4 +120,5 @@ class Tokenizer:
         return self.decoder.get(index)
 
 t = Tokenizer()
-print([t._convert_token_to_id(w) for w in t._tokenize("annoyingly")])
+print(t._tokenize("very annoyingly"))
+print([t._convert_token_to_id(w) for w in t._tokenize("very annoyingly")])
