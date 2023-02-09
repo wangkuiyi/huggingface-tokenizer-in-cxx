@@ -64,6 +64,7 @@ class Tokenizer:
         if token in self.cache:
             return self.cache[token]
         word = tuple(token)
+        print(f"word = {word}")
         pairs = get_pairs(word)
         print(f"pairs = {pairs}")
         if not pairs:
@@ -93,6 +94,8 @@ class Tokenizer:
                 else:
                     new_word.append(word[i])
                     i += 1
+                print(f"new_word = {new_word}")
+
             new_word = tuple(new_word)
             word = new_word
             if len(word) == 1:
@@ -126,4 +129,3 @@ class Tokenizer:
 
 t = Tokenizer()
 print([t._convert_token_to_id(w) for w in t._tokenize("annoyingly")])
-
