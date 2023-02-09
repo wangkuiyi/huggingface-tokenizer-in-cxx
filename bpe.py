@@ -1,21 +1,12 @@
-# curl -L https://huggingface.co/gpt2/raw/main/merges.txt -o /tmp/merges.txt
-# curl -L https://huggingface.co/gpt2/raw/main/vocab.json -o /tmp/vocab.json
-
 import regex as re
 import json
 
-def bytes_to_unicode():
-    """
-    Returns list of utf-8 byte and a mapping to unicode strings. We specifically avoids mapping to whitespace/control
-    characters the bpe code barfs on.
 
-    The reversible bpe codes work on unicode strings. This means you need a large # of unicode characters in your vocab
-    if you want to avoid UNKs. When you're at something like a 10B token dataset you end up needing around 5K for
-    decent coverage. This is a significant percentage of your normal, say, 32K bpe vocab. To avoid that, we want lookup
-    tables between utf-8 bytes and unicode strings.
-    """
+def bytes_to_unicode():
     bs = (
-        list(range(ord("!"), ord("~") + 1)) + list(range(ord("¡"), ord("¬") + 1)) + list(range(ord("®"), ord("ÿ") + 1))
+        list(range(ord("!"), ord("~") + 1))
+        + list(range(ord("¡"), ord("¬") + 1))
+        + list(range(ord("®"), ord("ÿ") + 1))
     )
     cs = bs[:]
     n = 0
@@ -26,6 +17,7 @@ def bytes_to_unicode():
             n += 1
     cs = [chr(n) for n in cs]
     return dict(zip(bs, cs))
+
 
 def get_pairs(word):
     """
@@ -40,11 +32,14 @@ def get_pairs(word):
         prev_char = char
     return pairs
 
+
 class Tokenizer:
     def __init__(self):
         self.unk_token = "<|unknown token|>"
-        
-        self.pat = re.compile(r"""'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+""")
+
+        self.pat = re.compile(
+            r"""'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"""
+        )
 
         with open("/tmp/vocab.json", encoding="utf-8") as vocab_handle:
             self.encoder = json.load(vocab_handle)
@@ -118,6 +113,7 @@ class Tokenizer:
     def _convert_id_to_token(self, index):
         """Converts an index (integer) in a token (str) using the vocab."""
         return self.decoder.get(index)
+
 
 t = Tokenizer()
 print(t._tokenize("very annoyingly 调皮"))
