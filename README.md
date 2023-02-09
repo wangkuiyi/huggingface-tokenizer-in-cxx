@@ -6,9 +6,9 @@ With this extraction, I can port it to C++: [`bpe.h`](bpe.h), [`bpe.cc`](bpe.cc)
 
 The following tech notes might help you understand the Python and C++ code:
 
-1. [Unicode in C++ and Python](u.md)
-1. [Understanding HuggingFace Tokenizers](0.md)
-1. [Unicode-enabled Regular Expression in C++](1.md)
+1. [Unicode in C++ and Python](doc/u.md)
+1. [Understanding HuggingFace Tokenizers](doc/0.md)
+1. [Unicode-enabled Regular Expression in C++](doc/1.md)
 
 Make sure you download the vocabulary file and the BPE merge rules from HuggingFace so you can run the programs.
 
