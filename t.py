@@ -12,4 +12,8 @@ def load_gpt2_tokenizer() -> transformers.GPT2Tokenizer:
   return tokenizer
 
 tknzr = load_gpt2_tokenizer()
-print(tknzr("zero one two three four"))
+toks = tknzr._tokenize("very annoyingly 顽皮")
+print(toks)
+for t in toks:
+  print(tknzr._convert_token_to_id(t))
+print(tknzr("very annoyingly 顽皮"))
