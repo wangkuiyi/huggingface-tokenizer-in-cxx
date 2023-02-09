@@ -1,30 +1,5 @@
-// clang++ -std=c++20 ~/w/gpt2cpp/bpe.cc -I ~/w/re2/b/install/include -L ~/w/re2/b/install/lib -lre2 -o /tmp/bpe && /tmp/bpe
-#include <codecvt>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <unordered_map>
-#include <utility>
-#include <set>
+#include "bpe.h"
 
-#include <re2/re2.h>
-#include <re2/stringpiece.h>
-
-
-void test_re2() {
-  RE2 re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
-  assert(re.ok());  // compiled; if not, see re.error();
-  
-  std::string w;
-  std::string text = "we'd annoyingly 顽皮";
-  re2::StringPiece input(text);
-
-  std::vector<std::string> v;
-  while (RE2::FindAndConsume(&input, re, &w)) {
-    v.push_back(w);
-  }
-  assert(v == std::vector<std::string>({"we", "\'d", " annoyingly", " 顽皮"}));
-}
 
 std::wstring utf8_to_wstring(const std::string &str) {
   std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
@@ -70,15 +45,6 @@ void bytes_to_unicode(std::unordered_map<uint8_t, wchar_t> *b2u,
   }
 }
 
-void test_bytes_to_unicode() {
-  std::unordered_map<uint8_t, wchar_t> b2u;
-  std::unordered_map<wchar_t, uint8_t> u2b;
-  bytes_to_unicode(&b2u, &u2b);
-  assert(b2u.size() == 256);
-  assert(b2u[0] == 0x100);
-  assert(u2b.size() == 256);
-}
-
 // Given a token as a UTF8 string, encode each byte into an wchar_t
 void byte_encode_token(const std::string& token,
 		       std::unordered_map<uint8_t, wchar_t>& b2u,
@@ -89,34 +55,6 @@ void byte_encode_token(const std::string& token,
     result->push_back(wc);
   }
 }
-
-void test_byte_encode_token() {
-  std::unordered_map<uint8_t, wchar_t> b2u;
-  bytes_to_unicode(&b2u, NULL);
-
-  std::string s(" very");
-  std::wstring b;
-  byte_encode_token(s, b2u, &b);
-  assert("Ġvery" == wstring_to_utf8(b));
-}
-
-// hash_pair_wstring is used in BPERanks to make a pair of wstrings
-// hashable, so the pair can be used as the key to unordered_map.
-struct hash_pair_wstring {
-  size_t operator()(const std::pair<std::wstring, std::wstring>& p) const {
-    auto hash1 = std::hash<std::wstring>{}(p.first);
-    auto hash2 = std::hash<std::wstring>{}(p.second);
-    // If hash1 == hash2, their XOR is zero.
-    return (hash1 != hash2) ? hash1 ^ hash2 : hash1;
-  }
-};
-
-// BPERanks maps each merge rule, which is a pair of wstrings, to its
-// rank.  This mapping allows quick lookup for the optimal merge rule.
-using BPERanks = std::unordered_map<std::pair<std::wstring,
-					      std::wstring>,
-				    int,
-				    hash_pair_wstring>;
 
 void load_merge_rules(std::istream& ins, BPERanks* bpe_ranks) {
   bpe_ranks->clear();
@@ -134,17 +72,6 @@ void load_merge_rules(std::istream& ins, BPERanks* bpe_ranks) {
   }
 }
 
-void test_load_merge_rules() {
-  BPERanks bpe_ranks;
-  std::fstream merges("/tmp/merges.txt", std::ios::in);
-  load_merge_rules(merges, &bpe_ranks);
-  assert(bpe_ranks.size() == 50000);
-
-  auto iter = bpe_ranks.find({utf8_to_wstring("Ġg"), utf8_to_wstring("azed")});
-  assert(iter != bpe_ranks.end());
-  assert(iter->second = 49999);
-}
-
 void get_pairs(const std::wstring& word,
 	       std::vector<std::pair<std::wstring, std::wstring> >* pairs) {
   pairs->clear();
@@ -157,14 +84,6 @@ void get_pairs(const std::wstring& word,
     pairs->push_back({std::wstring(1, previous), std::wstring(1, word[i])});
     previous = word[i];
   }
-}
-
-void test_get_pairs() {
-  std::vector<std::pair<std::wstring, std::wstring> > pairs;
-  get_pairs(utf8_to_wstring("very"), &pairs);
-  assert(pairs.size() == 3);
-  assert(wstring_to_utf8(pairs[1].first) == "e");
-  assert(wstring_to_utf8(pairs[1].second) == "r");
 }
 
 void bpe(const std::wstring& token,
@@ -231,21 +150,6 @@ void bpe(const std::wstring& token,
   }
 }
 
-void test_bpe() {
-  BPERanks bpe_ranks;
-  std::fstream merges("/tmp/merges.txt", std::ios::in);
-  load_merge_rules(merges, &bpe_ranks);
-  assert(bpe_ranks.size() == 50000);
-
-  std::vector<std::wstring> result;
-  bpe(utf8_to_wstring("annoyingly"), bpe_ranks, &result);
-  assert(result == std::vector<std::wstring>({L"ann", L"oy", L"ingly"}));
-
-  result.clear();
-  bpe(utf8_to_wstring("very"), bpe_ranks, &result);
-  assert(result == std::vector<std::wstring>({L"very"}));
-}
-
 void tokenize(const std::string& text,
 	      RE2& re,
 	      BPERanks& bpe_ranks,
@@ -254,7 +158,6 @@ void tokenize(const std::string& text,
   re2::StringPiece input(text);
   std::string token;
   while (RE2::FindAndConsume(&input, re, &token)) {
-    std::cout << "RE parsed token: " << token << std::endl;
     std::wstring wtoken;
     byte_encode_token(token,b2u,&wtoken);
 
@@ -267,32 +170,3 @@ void tokenize(const std::string& text,
   }
 }
 
-void test_tokenize(){
-  RE2 re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
-  assert(re.ok());  // compiled; if not, see re.error();
-
-  BPERanks bpe_ranks;
-  std::fstream merges("/tmp/merges.txt", std::ios::in);
-  load_merge_rules(merges, &bpe_ranks);
-
-  std::unordered_map<uint8_t, wchar_t> b2u;
-  bytes_to_unicode(&b2u, NULL);
-
-  std::vector<std::string> result;
-  tokenize("very annoyingly", re, bpe_ranks, b2u, &result);
-  for (auto s : result) {
-    std::cout << s << std::endl;
-  }
-}
-
-
-int main() {
-  // test_bytes_to_unicode();
-  // test_re2();
-  // test_load_merge_rules();
-  // test_byte_encode_token();
-  // test_get_pairs();
-  // test_bpe();
-  test_tokenize();
-  return 0;
-}

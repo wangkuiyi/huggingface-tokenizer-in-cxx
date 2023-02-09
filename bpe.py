@@ -120,5 +120,5 @@ class Tokenizer:
         return self.decoder.get(index)
 
 t = Tokenizer()
-print(t._tokenize("very annoyingly"))
-print([t._convert_token_to_id(w) for w in t._tokenize("very annoyingly")])
+print(t._tokenize("very annoyingly 调皮"))
+print([t._convert_token_to_id(w) for w in t._tokenize("very annoyingly 调皮")])
