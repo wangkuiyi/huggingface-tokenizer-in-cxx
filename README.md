@@ -1,5 +1,3 @@
-# gpt2cpp
-
 This repository is a C++ version of the Python HuggingFace tokenizers.
 
 In the HuggingFace Transformers repo, tokenization is done with 104,603 lines of Python code. It takes 5506 lines for GPT2-specific BPE. I went through the code using the Python Debugger (pdb). It turns out that most of them do nothing but virtual methods in a complicated class hierarchy. I took 120 lines of Python code and put them in the file [`bpe.py`] (bpe.py). This program is not a weaker or simpler version; it is the full HuggingFace BPE tokenizer.
