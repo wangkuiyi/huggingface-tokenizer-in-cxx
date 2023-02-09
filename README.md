@@ -30,22 +30,19 @@ Please run the following commands to run the extracted 120-line Python tokenizer
 python bpe.py
 ```
 
-To build the C++ port, you will need to build Google/RE2, which supports Unicode regular expressions while'std::regex' does not.
+To build the C++ port, you will need to build Google/RE2, which supports Unicode regular expressions while'std::regex' does not.  I added RE2 as a git submdoule of this repo.
 
 ```
-cd ~/w/
-git clone https://github.com/google/re2
-cd re2
-cmake -B b -S . -DCMAKE_INSTALL_PREFIX=b/install
-cmake --build b --target install
+cmake -B build-re2 -S re2 -DCMAKE_INSTALL_PREFIX=build-re2/install
+Cmake --build build-re2 --target install
 ```
 
 Then you can build the C++ port of the BPE tokenizer and run the unit test.
 
 ```bash
-clang++ -std=c++20 bpe.cc bpe_test.cc \
-  -I ~/w/re2/b/install/include \
-  -L ~/w/re2/b/install/lib \
+clang++ -std=c++20 src/bpe.cc src/bpe_test.cc \
+  -I build-re2/install/include \
+  -L build-re2/install/lib \
   -lre2 -o /tmp/bpe && /tmp/bpe
 ```
 
