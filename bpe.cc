@@ -1,4 +1,4 @@
-// clang++ -std=c++20 ~/w/gpt2cpp/t.cc -I ~/w/re2/b/install/include -L ~/w/re2/b/install/lib -lre2 -o /tmp/t && /tmp/t
+// clang++ -std=c++20 ~/w/gpt2cpp/bpe.cc -I ~/w/re2/b/install/include -L ~/w/re2/b/install/lib -lre2 -o /tmp/bpe && /tmp/bpe
 #include <codecvt>
 #include <iostream>
 #include <fstream>
