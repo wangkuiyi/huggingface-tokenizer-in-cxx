@@ -45,16 +45,34 @@ Then you can run the unit test.
 
 All three of the above programs load the same `vocab.json` and `merges.txt` files, so they all work exactly like HuggingFace did when it trained and served the GPT2 model.
 
-## Known Issues
+## Known Issue
 
 RE2 can match Unicode letters from all languages using rules like `\p{L}`. But it doesn't work with look-ahead syntax like `(?!...)`. This would make the C++ version act a little differently than the Python versions when there are more than one space between two words. Please tell me about any C++ regular expression libraries that can handle both Unicode and look-ahead.
 
-## Exhausted Test
-
-I downloaded the lyrics text dataset from https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres.  The file `lyrics_data.csv` contains 15,231,221 lines of text of 54 languages.  I simply renamed it into `/tmp/sample.txt`, and ran the C++ tokenzier and the HuggingFace tokenizer using the following command:
+This does not seem a big issue because among the 15,231,221 lines in the [lyrics text dataset](https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres) of 54 languages, the C++ tokenizer generates different output from the HuggingFace one for only 4 lines. And the reason are all due to successive two whitespaces.
 
 ```bash
 cmake --build /tmp/b && /tmp/b/bin/bpe_test | diff - <(python tool/t.py)
 ```
+```
+/, dis, ney, /,, L, ilo, Ġ&, ĠSt, itch, Ġ-, Ġ, Ġ, He, ĠMe, le, ĠNo, ĠLil, o, ,, /, dis, ney, /, l, ilo, -, st, itch, -, he, -, me, le, -, no, -, l, ilo, ., html, ,", V, ocal, Ġ1, :
+/, dis, ney, /,, L, ilo, Ġ&, ĠSt, itch, Ġ-, Ġ, ĠHe, ĠMe, le, ĠNo, ĠLil, o, ,, /, dis, ney, /, l, ilo, -, st, itch, -, he, -, me, le, -, no, -, l, ilo, ., html, ,", V, ocal, Ġ1, :
 
-For each these 15M lines of input data, the tokenization results from the C++ tokenizer and HuggingFace tokenizer are the same.
+/disney/,Lilo & Stitch -  He Mele No Lilo,/disney/lilo-stitch-he-mele-no-lilo.html,"Vocal 1:
+
+Let, Ġyour, Ġvoice, Ġbe, Ġall, ĠI, ĠâĢ, ¨, H, ear, Ġnow
+Let, Ġyour, Ġvoice, Ġbe, Ġall, ĠI, Ġ, âĢ, ¨, H, ear, Ġnow
+
+Let your voice be all I  Hear now
+
+Let, Ġyour, Ġvoice, Ġbe, Ġall, ĠI, ĠâĢ, ¨, H, ear, Ġnow
+Let, Ġyour, Ġvoice, Ġbe, Ġall, ĠI, Ġ, âĢ, ¨, H, ear, Ġnow
+
+Let your voice be all I  Hear now
+
+/, m, um, /,, P, rophe, cies, Ġ&, Ġ, Ġ, Re, vers, ed, ĠMemories, ,, /, m, um, /, prop, he, cies, -, re, vers, ed, -, mem, ories, ., html, ,", (, L, al, ala, Ġl, al, ala, Ġl, al, ala, Ġ:, Ġl, ala, )
+/, m, um, /,, P, rophe, cies, Ġ&, Ġ, ĠRe, vers, ed, ĠMemories, ,, /, m, um, /, prop, he, cies, -, re, vers, ed, -, mem, ories, ., html, ,", (, L, al, ala, Ġl, al, ala, Ġl, al, ala, Ġ:, Ġl, ala, )
+
+/mum/,Prophecies &  Reversed Memories,/mum/prophecies-reversed-memories.html,"(Lalala lalala lalala : lala)
+```
+
