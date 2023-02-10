@@ -83,10 +83,30 @@ void test_tokenize() {
   std::unordered_map<uint8_t, wchar_t> b2u;
   bytes_to_unicode(&b2u, NULL);
 
-  std::vector<std::string> result;
-  tokenize("very annoyingly 调皮", re, bpe_ranks, b2u, &result);
-  for (auto s : result) {
-    std::cout << s << std::endl;
+  auto _print_string_vec = [](std::vector<std::string>& v) {
+    // To be compatible with Python's print(*lst, sep=', ')
+    for (int i = 0; i < v.size(); ++i) {
+      std::cout << v[i];
+      if (i < v.size()-1)
+	std::cout << ", ";
+    }
+    std::cout << std::endl;
+  };
+
+  // In order to make sure that /tmp/sample.txt contains many lines of
+  // text of different langauges, I download the lyrics data from
+  // https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres,
+  // and ran the following commands to randomly sample 10000 lines.
+  /*
+     cat /tmp/lyrics-data.csv | head -n 1000000  | awk 'NF' | sort | \
+     uniq | sort -R | head -n 10000 > /tmp/sample.txt
+  */
+  std::fstream ins("/tmp/sample.txt", std::ios::in);
+  std::string line;
+  while (std::getline(ins, line)) {
+    std::vector<std::string> result;
+    tokenize(line, re, bpe_ranks, b2u, &result);
+    _print_string_vec(result);
   }
 }
 

@@ -116,5 +116,8 @@ class Tokenizer:
 
 
 t = Tokenizer()
-print(t._tokenize("very annoyingly 调皮"))
-print([t._convert_token_to_id(w) for w in t._tokenize("very annoyingly 调皮")])
+with open("/tmp/sample.txt") as f:
+    for line in f:
+        lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
+        print(*lst, sep=', ') # Do no quote strings.
+# print([t._convert_token_to_id(w) for w in t._tokenize("very annoyingly 调皮")])

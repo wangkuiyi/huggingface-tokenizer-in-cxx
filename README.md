@@ -48,3 +48,13 @@ All three of the above programs load the same `vocab.json` and `merges.txt` file
 ## Known Issues
 
 RE2 can match Unicode letters from all languages using rules like `\p{L}`. But it doesn't work with look-ahead syntax like `(?!...)`. This would make the C++ version act a little differently than the Python versions when there are more than one space between two words. Please tell me about any C++ regular expression libraries that can handle both Unicode and look-ahead.
+
+## Exhausted Test
+
+I downloaded the lyrics text dataset from https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres.  The file `lyrics_data.csv` contains 15,231,221 lines of text of 54 languages.  I simply renamed it into `/tmp/sample.txt`, and ran the C++ tokenzier and the HuggingFace tokenizer using the following command:
+
+```bash
+cmake --build /tmp/b && /tmp/b/bin/bpe_test | diff - <(python tool/t.py)
+```
+
+For each these 15M lines of input data, the tokenization results from the C++ tokenizer and HuggingFace tokenizer are the same.
