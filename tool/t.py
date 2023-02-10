@@ -14,9 +14,8 @@ def load_gpt2_tokenizer() -> transformers.GPT2Tokenizer:
     return tokenizer
 
 
-tknzr = load_gpt2_tokenizer()
-toks = tknzr._tokenize("very annoyingly 顽皮")
-print(toks)
-for t in toks:
-    print(tknzr._convert_token_to_id(t))
-print(tknzr("very annoyingly 顽皮"))
+t = load_gpt2_tokenizer()
+with open("/tmp/sample.txt") as f:
+    for line in f:
+        lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
+        print(*lst, sep=', ') # Do no quote strings.
