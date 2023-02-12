@@ -166,7 +166,7 @@ void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
   size_t s = 0;
   size_t i = text.find(eot);
   while (i != std::string::npos) {
-    _tokenize(text.substr(s, i-s), re, bpe_ranks, b2u, result);
+    _tokenize(text.substr(s, i - s), re, bpe_ranks, b2u, result);
     result->push_back(eot);
     s = i + eot.size();
     i = text.find(eot, s);

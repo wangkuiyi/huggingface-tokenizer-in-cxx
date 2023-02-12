@@ -93,14 +93,12 @@ void test_tokenize() {
   bytes_to_unicode(&b2u, NULL);
 
   std::vector<std::string> candidates = {
-    "this is <|endoftext|> else<|endoftext|>",
-    "<|endoftext|> else<|endoftext|>",
-    "this is <|endoftext|> else",
-    "this is <|endoftext|>else",
-    "this is else"};
+      "this is <|endoftext|> else<|endoftext|>",
+      "<|endoftext|> else<|endoftext|>", "this is <|endoftext|> else",
+      "this is <|endoftext|>else", "this is else"};
   for (auto s : candidates) {
     std::vector<std::string> result;
-    tokenize(s, re, bpe_ranks, b2u,&result);
+    tokenize(s, re, bpe_ranks, b2u, &result);
     _print_string_vec(result);
   }
 }
