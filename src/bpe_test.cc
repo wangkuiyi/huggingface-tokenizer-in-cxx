@@ -133,8 +133,8 @@ void test_load_vocab() {
   std::unordered_map<int, std::string> i2t;
   std::fstream vocab_txt("/tmp/vocab.txt", std::ios::in);
   load_vocab(vocab_txt, &t2i, &i2t);
-  assert(t2i.size() == 100514);
-  assert(i2t.size() == 100514);
+  assert(t2i.size() == 50257);
+  assert(i2t.size() == 50257);
   assert(t2i["\""] == 1);
   assert(i2t[1] == "\"");
 }
