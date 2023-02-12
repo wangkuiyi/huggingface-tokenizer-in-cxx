@@ -116,6 +116,7 @@ class Tokenizer:
             bpe_tokens.append(eot)
             s = i+len(eot)
             i = text.find(eot, i+len(eot))
+        bpe_tokens.extend(self._tokenize(text[s:]))
         return bpe_tokens
             
     def _convert_token_to_id(self, token):
@@ -134,4 +135,10 @@ t = Tokenizer()
 #         print(*lst, sep=', ') # Do no quote strings.
 
 txt = 'this is <|endoftext|> else <|endoftext|>'
+print(t.tokenize(txt))
+txt = '<|endoftext|> else <|endoftext|>'
+print(t.tokenize(txt))
+txt = 'this is <|endoftext|> else'
+print(t.tokenize(txt))
+txt = 'this is else'
 print(t.tokenize(txt))

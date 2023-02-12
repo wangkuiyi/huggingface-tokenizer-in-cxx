@@ -23,3 +23,9 @@ def load_gpt2_tokenizer() -> transformers.GPT2Tokenizer:
 t = transformers.GPT2Tokenizer.from_pretrained('gpt2')
 txt = 'this is <|endoftext|> else <|endoftext|>'
 print(t.tokenize(txt))
+txt = '<|endoftext|> else <|endoftext|>'
+print(t.tokenize(txt))
+txt = 'this is <|endoftext|> else'
+print(t.tokenize(txt))
+txt = 'this is else'
+print(t.tokenize(txt))
