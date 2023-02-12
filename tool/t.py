@@ -27,6 +27,10 @@ candidates = [
     "this is <|endoftext|> else",
     "this is <|endoftext|>else",
     "this is else",
+    "this is <|endoftext|>T恤<|endoftext|>",
+    "<|endoftext|>要不<|endoftext|>",
+    "this is <|endoftext|> 吗？",
+    "this is <|endoftext|>吗？",
 ]
 for s in candidates:
     print(*t.tokenize(s), sep=", ")

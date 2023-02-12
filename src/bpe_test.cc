@@ -94,8 +94,14 @@ void test_tokenize() {
 
   std::vector<std::string> candidates = {
       "this is <|endoftext|> else<|endoftext|>",
-      "<|endoftext|> else<|endoftext|>", "this is <|endoftext|> else",
-      "this is <|endoftext|>else", "this is else"};
+      "<|endoftext|> else<|endoftext|>",
+      "this is <|endoftext|> else",
+      "this is <|endoftext|>else",
+      "this is else",
+      "this is <|endoftext|>T恤<|endoftext|>",
+      "<|endoftext|>要不<|endoftext|>",
+      "this is <|endoftext|> 吗？",
+      "this is <|endoftext|>吗？"};
   for (auto s : candidates) {
     std::vector<std::string> result;
     tokenize(s, re, bpe_ranks, b2u, &result);
