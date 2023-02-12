@@ -134,11 +134,11 @@ t = Tokenizer()
 #         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
 #         print(*lst, sep=', ') # Do no quote strings.
 
-txt = 'this is <|endoftext|> else <|endoftext|>'
-print(t.tokenize(txt))
-txt = '<|endoftext|> else <|endoftext|>'
-print(t.tokenize(txt))
-txt = 'this is <|endoftext|> else'
-print(t.tokenize(txt))
-txt = 'this is else'
-print(t.tokenize(txt))
+candidates =[
+    'this is <|endoftext|> else<|endoftext|>',
+    '<|endoftext|> else<|endoftext|>',
+    'this is <|endoftext|> else',
+    'this is <|endoftext|>else',
+    'this is else']
+for s in candidates:
+    print(*t.tokenize(s), sep=", ")

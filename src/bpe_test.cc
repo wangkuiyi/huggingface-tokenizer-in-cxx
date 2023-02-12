@@ -70,6 +70,15 @@ void test_bpe() {
   assert(result == std::vector<std::wstring>({L"very"}));
 }
 
+auto _print_string_vec = [](std::vector<std::string>& v) {
+  // To be compatible with Python's print(*lst, sep=', ')
+  for (int i = 0; i < v.size(); ++i) {
+    std::cout << v[i];
+    if (i < v.size() - 1) std::cout << ", ";
+  }
+  std::cout << std::endl;
+};
+
 void test_tokenize() {
   RE2 re(
       "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
@@ -83,15 +92,31 @@ void test_tokenize() {
   std::unordered_map<uint8_t, wchar_t> b2u;
   bytes_to_unicode(&b2u, NULL);
 
-  auto _print_string_vec = [](std::vector<std::string>& v) {
-    // To be compatible with Python's print(*lst, sep=', ')
-    for (int i = 0; i < v.size(); ++i) {
-      std::cout << v[i];
-      if (i < v.size()-1)
-	std::cout << ", ";
-    }
-    std::cout << std::endl;
-  };
+  std::vector<std::string> candidates = {
+    "this is <|endoftext|> else<|endoftext|>",
+    "<|endoftext|> else<|endoftext|>",
+    "this is <|endoftext|> else",
+    "this is <|endoftext|>else",
+    "this is else"};
+  for (auto s : candidates) {
+    std::vector<std::string> result;
+    tokenize(s, re, bpe_ranks, b2u,&result);
+    _print_string_vec(result);
+  }
+}
+
+void test_tokenize_regression() {
+  RE2 re(
+      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
+      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
+  assert(re.ok());  // compiled; if not, see re.error();
+
+  BPERanks bpe_ranks;
+  std::fstream merges("/tmp/merges.txt", std::ios::in);
+  load_merge_rules(merges, &bpe_ranks);
+
+  std::unordered_map<uint8_t, wchar_t> b2u;
+  bytes_to_unicode(&b2u, NULL);
 
   // In order to make sure that /tmp/sample.txt contains many lines of
   // text of different langauges, I download the lyrics data from
