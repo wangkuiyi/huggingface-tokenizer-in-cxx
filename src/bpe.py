@@ -108,17 +108,17 @@ class Tokenizer:
 
     def tokenize(self, text):
         bpe_tokens = []
-        eot = '<|endoftext|>'
+        eot = "<|endoftext|>"
         s = 0
         i = text.find(eot)
         while i != -1:
             bpe_tokens.extend(self._tokenize(text[s:i]))
             bpe_tokens.append(eot)
-            s = i+len(eot)
-            i = text.find(eot, i+len(eot))
+            s = i + len(eot)
+            i = text.find(eot, i + len(eot))
         bpe_tokens.extend(self._tokenize(text[s:]))
         return bpe_tokens
-            
+
     def _convert_token_to_id(self, token):
         """Converts a token (str) in an id using the vocab."""
         return self.encoder.get(token, self.encoder.get(self.unk_token))
@@ -134,11 +134,12 @@ t = Tokenizer()
 #         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
 #         print(*lst, sep=', ') # Do no quote strings.
 
-candidates =[
-    'this is <|endoftext|> else<|endoftext|>',
-    '<|endoftext|> else<|endoftext|>',
-    'this is <|endoftext|> else',
-    'this is <|endoftext|>else',
-    'this is else']
+candidates = [
+    "this is <|endoftext|> else<|endoftext|>",
+    "<|endoftext|> else<|endoftext|>",
+    "this is <|endoftext|> else",
+    "this is <|endoftext|>else",
+    "this is else",
+]
 for s in candidates:
     print(*t.tokenize(s), sep=", ")

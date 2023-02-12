@@ -20,12 +20,13 @@ def load_gpt2_tokenizer() -> transformers.GPT2Tokenizer:
 #         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
 #         print(*lst, sep=', ') # Do no quote strings.
 
-t = transformers.GPT2Tokenizer.from_pretrained('gpt2')
-candidates =[
-    'this is <|endoftext|> else<|endoftext|>',
-    '<|endoftext|> else<|endoftext|>',
-    'this is <|endoftext|> else',
-    'this is <|endoftext|>else',
-    'this is else']
+t = transformers.GPT2Tokenizer.from_pretrained("gpt2")
+candidates = [
+    "this is <|endoftext|> else<|endoftext|>",
+    "<|endoftext|> else<|endoftext|>",
+    "this is <|endoftext|> else",
+    "this is <|endoftext|>else",
+    "this is else",
+]
 for s in candidates:
     print(*t.tokenize(s), sep=", ")
