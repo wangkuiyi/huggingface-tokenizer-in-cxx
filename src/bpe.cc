@@ -141,9 +141,9 @@ void bpe(const std::wstring& token, BPERanks& bpe_ranks,
   }
 }
 
-void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
-              std::unordered_map<uint8_t, wchar_t>& b2u,
-              std::vector<std::string>* result) {
+void _tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
+               std::unordered_map<uint8_t, wchar_t>& b2u,
+               std::vector<std::string>* result) {
   re2::StringPiece input(text);
   std::string token;
   while (RE2::FindAndConsume(&input, re, &token)) {
@@ -157,4 +157,19 @@ void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
       result->push_back(wstring_to_utf8(ws));
     }
   }
+}
+
+void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
+              std::unordered_map<uint8_t, wchar_t>& b2u,
+              std::vector<std::string>* result) {
+  const std::string eot("<|endoftext|>");
+  size_t s = 0;
+  size_t i = text.find(eot);
+  while (i != std::string::npos) {
+    _tokenize(text.substr(s, i - s), re, bpe_ranks, b2u, result);
+    result->push_back(eot);
+    s = i + eot.size();
+    i = text.find(eot, s);
+  }
+  _tokenize(text.substr(s), re, bpe_ranks, b2u, result);
 }
