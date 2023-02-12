@@ -106,6 +106,18 @@ class Tokenizer:
             bpe_tokens.extend(bpe_token for bpe_token in self.bpe(token).split(" "))
         return bpe_tokens
 
+    def tokenize(self, text):
+        bpe_tokens = []
+        eot = '<|endoftext|>'
+        s = 0
+        i = text.find(eot)
+        while i != -1:
+            bpe_tokens.extend(self._tokenize(text[s:i]))
+            bpe_tokens.append(eot)
+            s = i+len(eot)
+            i = text.find(eot, i+len(eot))
+        return bpe_tokens
+            
     def _convert_token_to_id(self, token):
         """Converts a token (str) in an id using the vocab."""
         return self.encoder.get(token, self.encoder.get(self.unk_token))
@@ -116,8 +128,10 @@ class Tokenizer:
 
 
 t = Tokenizer()
-with open("/tmp/sample.txt") as f:
-    for line in f:
-        lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
-        print(*lst, sep=', ') # Do no quote strings.
-# print([t._convert_token_to_id(w) for w in t._tokenize("very annoyingly 调皮")])
+# with open("/tmp/sample.txt") as f:
+#     for line in f:
+#         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
+#         print(*lst, sep=', ') # Do no quote strings.
+
+txt = 'this is <|endoftext|> else <|endoftext|>'
+print(t.tokenize(txt))

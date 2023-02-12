@@ -14,8 +14,12 @@ def load_gpt2_tokenizer() -> transformers.GPT2Tokenizer:
     return tokenizer
 
 
-t = load_gpt2_tokenizer()
-with open("/tmp/sample.txt") as f:
-    for line in f:
-        lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
-        print(*lst, sep=', ') # Do no quote strings.
+# t = load_gpt2_tokenizer()
+# with open("/tmp/sample.txt") as f:
+#     for line in f:
+#         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
+#         print(*lst, sep=', ') # Do no quote strings.
+
+t = transformers.GPT2Tokenizer.from_pretrained('gpt2')
+txt = 'this is <|endoftext|> else <|endoftext|>'
+print(t.tokenize(txt))
