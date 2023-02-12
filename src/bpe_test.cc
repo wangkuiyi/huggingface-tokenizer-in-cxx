@@ -147,5 +147,8 @@ int main() {
   test_get_pairs();
   test_bpe();
   test_tokenize();
+  test_load_vocab();
   return 0;
 }
+
+
