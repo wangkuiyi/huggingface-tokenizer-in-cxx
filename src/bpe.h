@@ -53,4 +53,7 @@ void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
               std::unordered_map<uint8_t, wchar_t>& b2u,
               std::vector<std::string>* result);
 
+void load_vocab(std::istream& ins, std::unordered_map<std::string, int>* t2i,
+                std::unordered_map<int, std::string>* i2t);
+
 #endif  // HUGGINGFACE_TRANSFORMERS_TOKENIZER_GPT2_BPE

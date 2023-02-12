@@ -173,3 +173,46 @@ void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
   }
   _tokenize(text.substr(s), re, bpe_ranks, b2u, result);
 }
+
+void load_vocab(std::istream& ins, std::unordered_map<std::string, int>* t2i,
+                std::unordered_map<int, std::string>* i2t) {
+  t2i->clear();
+  i2t->clear();
+
+  std::string line;
+  std::string token;
+  int n = 0;
+  while (std::getline(ins, line)) {
+    if (n % 2 == 0) {
+      token = line;
+    } else {
+      t2i->insert({token, std::stoi(line)});
+      i2t->insert({std::stoi(line), token});
+    }
+    n++;
+  }
+}
+
+//==============================================================================
+// Tokenizer states
+//==============================================================================
+struct Tokenizer {
+  RE2 re;
+  BPERanks bpe_ranks;
+  std::unordered_map<uint8_t, wchar_t> b2u;
+  std::unordered_map<wchar_t, uint8_t> u2b;
+  std::unordered_map<std::string, int> t2i;
+  std::unordered_map<int, std::string> i2t;
+  
+  Tokenizer(const char* bpe_merges_path, const char* vocab_txt_path)
+      : re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
+           "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)") {
+    std::fstream merges(bpe_merges_path, std::ios::in);
+    load_merge_rules(merges, &bpe_ranks);
+
+    bytes_to_unicode(&b2u, &u2b);
+
+    std::fstream vocab_txt(vocab_txt_path, std::ios::in);
+    load_vocab(vocab_txt, &t2i, &i2t);
+  }
+};

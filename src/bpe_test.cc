@@ -1,9 +1,10 @@
 #include "bpe.h"
 
+RE2 re(
+    "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
+    "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
+
 void test_re2() {
-  RE2 re(
-      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   std::string w;
@@ -80,9 +81,6 @@ auto _print_string_vec = [](std::vector<std::string>& v) {
 };
 
 void test_tokenize() {
-  RE2 re(
-      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   BPERanks bpe_ranks;
@@ -104,9 +102,6 @@ void test_tokenize() {
 }
 
 void test_tokenize_regression() {
-  RE2 re(
-      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   BPERanks bpe_ranks;
@@ -131,6 +126,17 @@ void test_tokenize_regression() {
     tokenize(line, re, bpe_ranks, b2u, &result);
     _print_string_vec(result);
   }
+}
+
+void test_load_vocab() {
+    std::unordered_map<std::string, int> t2i;
+  std::unordered_map<int, std::string> i2t;
+  std::fstream vocab_txt("/tmp/vocab.txt", std::ios::in);
+  load_vocab(vocab_txt, &t2i, &i2t);
+  assert(t2i.size() == 100514);
+  assert(i2t.size() == 100514);
+  assert(t2i["\""] == 1);
+  assert(i2t[1] == "\"");
 }
 
 int main() {
