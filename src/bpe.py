@@ -119,13 +119,13 @@ class Tokenizer:
         bpe_tokens.extend(self._tokenize(text[s:]))
         return bpe_tokens
 
-    def _convert_token_to_id(self, token):
-        """Converts a token (str) in an id using the vocab."""
-        return self.encoder.get(token, self.encoder.get(self.unk_token))
+    def encode(self, text):
+        return [self.encoder[token] for token in self.tokenize(text)]
 
-    def _convert_id_to_token(self, index):
-        """Converts an index (integer) in a token (str) using the vocab."""
-        return self.decoder.get(index)
+    def decode(self, indices):
+        text = ''.join([self.decoder.get(index) for index in indices])
+        return bytearray(self.byte_decoder[c] for c in text).decode('utf-8')
+
 
 
 t = Tokenizer()
@@ -142,4 +142,4 @@ candidates = [
     "this is else",
 ]
 for s in candidates:
-    print(*t.tokenize(s), sep=", ")
+    assert t.decode(t.encode(s)) == s
