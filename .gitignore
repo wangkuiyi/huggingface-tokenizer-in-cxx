@@ -3,3 +3,5 @@ assets/
 vocab.cc
 build-*/
 build/
+.DS_Store
+*xcuserstate
