@@ -12,6 +12,7 @@
 
 #include <re2/re2.h>
 #include <re2/stringpiece.h>
+#include <tokenizer/bpe.h>
 
 extern "C" void hello() {
   std::string s("Hello\n");
