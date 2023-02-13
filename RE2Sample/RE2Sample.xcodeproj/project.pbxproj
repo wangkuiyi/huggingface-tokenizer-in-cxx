@@ -16,6 +16,7 @@
 		187AFC8F2999E7F8007E357F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 187AFC8E2999E7F8007E357F /* main.m */; };
 		187AFC962999E822007E357F /* re2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187AFC952999E822007E357F /* re2.xcframework */; };
 		187AFC982999E947007E357F /* use_re2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187AFC972999E947007E357F /* use_re2.cpp */; };
+		187AFC9A2999F069007E357F /* tokenizer.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187AFC992999F069007E357F /* tokenizer.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		187AFC8E2999E7F8007E357F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		187AFC952999E822007E357F /* re2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = re2.xcframework; path = ../../build/re2/re2.xcframework; sourceTree = "<group>"; };
 		187AFC972999E947007E357F /* use_re2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = use_re2.cpp; sourceTree = "<group>"; };
+		187AFC992999F069007E357F /* tokenizer.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = tokenizer.xcframework; path = ../../build/tokenizer.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +43,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				187AFC962999E822007E357F /* re2.xcframework in Frameworks */,
+				187AFC9A2999F069007E357F /* tokenizer.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +82,7 @@
 				187AFC8D2999E7F8007E357F /* Info.plist */,
 				187AFC8E2999E7F8007E357F /* main.m */,
 				187AFC952999E822007E357F /* re2.xcframework */,
+				187AFC992999F069007E357F /* tokenizer.xcframework */,
 			);
 			path = RE2Sample;
 			sourceTree = "<group>";

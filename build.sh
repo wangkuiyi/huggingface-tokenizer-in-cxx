@@ -19,7 +19,7 @@ done
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 SRC_DIR=$SCRIPT_DIR
 BUILD_DIR=$SCRIPT_DIR/build
-XCFRAMEWORK="$BUILD_DIR"/bpe.xcframework
+XCFRAMEWORK="$BUILD_DIR"/tokenizer.xcframework
 
 
 # Build the tokenizer into a framework for each target.
@@ -44,7 +44,7 @@ function build_for_ios() {
     label=ios-$1-"$arch"
     build_dir="$BUILD_DIR"/"$label"
 
-    test_file="$build_dir"/bpe.framework/bpe
+    test_file="$build_dir"/tokenizer.framework/tokenizer
     if test -f "$test_file" && lipo -info "$test_file"; then
         echo "Skip building iree.framework for $label."
     else
@@ -75,7 +75,7 @@ function build_for_macos() {
     label=macos-"$arch"
     build_dir="$BUILD_DIR"/"$label"
 
-    test_file="$build_dir"/bpe.framework/bpe
+    test_file="$build_dir"/tokenizer.framework/tokenizer
     if test -f "$test_file" && lipo -info "$test_file"; then
         echo "Skip building iree.framework for $label."
     else
@@ -98,8 +98,8 @@ function merge_fat_static_library() {
     src_label=$2
     dst_label=$1
 
-    src="$BUILD_DIR"/$src_label/bpe.framework/bpe
-    dst="$BUILD_DIR"/$dst_label/bpe.framework/bpe
+    src="$BUILD_DIR"/$src_label/tokenizer.framework/tokenizer
+    dst="$BUILD_DIR"/$dst_label/tokenizer.framework/tokenizer
 
     if lipo -info "$dst" | grep 'Non-fat' >/dev/null; then
         echo "┌------------------------------------------------------------------------------┐"
@@ -140,8 +140,8 @@ echo "  Aggregating frameworks into an xcframework ..."
 echo "└------------------------------------------------------------------------------┘"
 rm -rf "$XCFRAMEWORK"
 xcodebuild -create-xcframework \
-    -framework "$BUILD_DIR"/macos-arm64/bpe.framework \
-    -framework "$BUILD_DIR"/ios-sim-arm64/bpe.framework \
-    -framework "$BUILD_DIR"/ios-dev-arm64/bpe.framework \
+    -framework "$BUILD_DIR"/macos-arm64/tokenizer.framework \
+    -framework "$BUILD_DIR"/ios-sim-arm64/tokenizer.framework \
+    -framework "$BUILD_DIR"/ios-dev-arm64/tokenizer.framework \
     -output "$XCFRAMEWORK"
 tree -L 1 -d "$XCFRAMEWORK"
