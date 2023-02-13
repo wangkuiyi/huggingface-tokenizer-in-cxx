@@ -19,10 +19,7 @@ done
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 SRC_DIR=$SCRIPT_DIR
 BUILD_DIR=$SCRIPT_DIR/build
-IREE_BUILD_COMPILER_DIR=$IREE_BUILD_DIR/compiler
-IREE_BUILD_COMPILER_INSTALL_DIR=$IREE_BUILD_COMPILER_DIR/install
-IREE_BUILD_RUNTIME_DIR=$IREE_BUILD_DIR/runtime
-IREE_BUILD_RUNTIME_XCFRAMEWORK="$IREE_BUILD_RUNTIME_DIR"/iree.xcframework
+XCFRAMEWORK="$BUILD_DIR"/bpe.xcframework
 
 
 # Build the tokenizer into a framework for each target.
@@ -138,19 +135,14 @@ build_for_macos arm64
 merge_fat_static_library ios-sim-arm64 ios-sim-x86_64
 merge_fat_static_library macos-arm64 macos-x86_64
 
-# # Step 3. Merge the above frameworks into an XCFramework
-# echo "┌------------------------------------------------------------------------------┐"
-# echo "  Aggregating frameworks into an xcframework ..."
-# echo "└------------------------------------------------------------------------------┘"
-# rm -rf "$IREE_BUILD_RUNTIME_XCFRAMEWORK"
-# # TODO(wangkuiyi) xcodebuild cannot accept input frameworks built with
-# # LTO enabled.  It will complain unknown architecture, even if lipo
-# # -info could identify the architecture.  Currently, we disable LTO
-# # for macOS/iOS.  But LTO should be enabled for smaller binary size
-# # and better runtime performance.
-# xcodebuild -create-xcframework \
-#     -framework "$IREE_BUILD_RUNTIME_DIR"/macos-arm64/lib/iree.framework \
-#     -framework "$IREE_BUILD_RUNTIME_DIR"/ios-sim-arm64/lib/iree.framework \
-#     -framework "$IREE_BUILD_RUNTIME_DIR"/ios-dev-arm64/lib/iree.framework \
-#     -output "$IREE_BUILD_RUNTIME_XCFRAMEWORK"
-# tree -L 1 -d /Users/y/w/iree-ios/build/runtime/iree.xcframework
+# Step 3. Merge the above frameworks into an XCFramework
+echo "┌------------------------------------------------------------------------------┐"
+echo "  Aggregating frameworks into an xcframework ..."
+echo "└------------------------------------------------------------------------------┘"
+rm -rf "$XCFRAMEWORK"
+xcodebuild -create-xcframework \
+    -framework "$BUILD_DIR"/macos-arm64/bpe.framework \
+    -framework "$BUILD_DIR"/ios-sim-arm64/bpe.framework \
+    -framework "$BUILD_DIR"/ios-dev-arm64/bpe.framework \
+    -output "$XCFRAMEWORK"
+tree -L 1 -d "$XCFRAMEWORK"
