@@ -2,3 +2,4 @@
 assets/
 vocab.cc
 build-*/
+build/

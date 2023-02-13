@@ -44,6 +44,18 @@ target_compile_features(bpe PUBLIC cxx_std_11)
 target_include_directories(bpe PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/re2)
 set_target_properties(bpe PROPERTIES SOVERSION ${SONAME} VERSION ${SONAME}.0.0)
 
+if(APPLE)
+  set_target_properties(bpe PROPERTIES
+    FRAMEWORK TRUE
+    FRAMEWORK_VERSION A
+    MACOSX_FRAMEWORK_IDENTIFIER dev.iree.iree
+    VERSION 16.4.0
+    SOVERSION 1.0.0
+    XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED OFF
+    PUBLIC_HEADER "src/bpe.h"
+  )
+endif()
+
 add_executable(bpe_test src/bpe_test.cc)
 set_target_properties(bpe_test
   PROPERTIES
