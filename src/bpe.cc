@@ -46,11 +46,11 @@ void bytes_to_unicode(std::unordered_map<uint8_t, wchar_t>* b2u,
 
 // Given a token as a UTF8 string, encode each byte into an wchar_t
 void byte_encode_token(const std::string& token,
-                       std::unordered_map<uint8_t, wchar_t>& b2u,
+                       const std::unordered_map<uint8_t, wchar_t>& b2u,
                        std::wstring* result) {
   result->resize(0);
   for (char c : token) {
-    wchar_t wc = b2u[uint8_t(c)];
+    wchar_t wc = b2u.at(uint8_t(c));
     result->push_back(wc);
   }
 }
@@ -84,7 +84,7 @@ void get_pairs(const std::wstring& word,
   }
 }
 
-void bpe(const std::wstring& token, BPERanks& bpe_ranks,
+void bpe(const std::wstring& token, const BPERanks& bpe_ranks,
          std::vector<std::wstring>* result) {
   std::set<int> merged;  // records indices in pairs that were merged.
   auto _left = [](int i, std::set<int>& merged) {
@@ -142,7 +142,7 @@ void bpe(const std::wstring& token, BPERanks& bpe_ranks,
 }
 
 void _tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
-               std::unordered_map<uint8_t, wchar_t>& b2u,
+               const std::unordered_map<uint8_t, wchar_t>& b2u,
                std::vector<std::string>* result) {
   re2::StringPiece input(text);
   std::string token;
@@ -160,7 +160,7 @@ void _tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
 }
 
 void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
-              std::unordered_map<uint8_t, wchar_t>& b2u,
+              const std::unordered_map<uint8_t, wchar_t>& b2u,
               std::vector<std::string>* result) {
   const std::string eot("<|endoftext|>");
   size_t s = 0;
@@ -193,26 +193,30 @@ void load_vocab(std::istream& ins, std::unordered_map<std::string, int>* t2i,
   }
 }
 
-//==============================================================================
-// Tokenizer states
-//==============================================================================
-struct Tokenizer {
-  RE2 re;
-  BPERanks bpe_ranks;
-  std::unordered_map<uint8_t, wchar_t> b2u;
-  std::unordered_map<wchar_t, uint8_t> u2b;
-  std::unordered_map<std::string, int> t2i;
-  std::unordered_map<int, std::string> i2t;
-  
-  Tokenizer(const char* bpe_merges_path, const char* vocab_txt_path)
-      : re("('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-           "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)") {
-    std::fstream merges(bpe_merges_path, std::ios::in);
-    load_merge_rules(merges, &bpe_ranks);
-
-    bytes_to_unicode(&b2u, &u2b);
-
-    std::fstream vocab_txt(vocab_txt_path, std::ios::in);
-    load_vocab(vocab_txt, &t2i, &i2t);
+void encode(const std::string& text, RE2& re, BPERanks& bpe_ranks,
+            std::unordered_map<uint8_t, wchar_t>& b2u,
+            const std::unordered_map<std::string, int>& t2i,
+            std::vector<int>* ids) {
+  std::vector<std::string> result;
+  tokenize(text, re, bpe_ranks, b2u, &result);
+  ids->clear();
+  for (auto s : result) {
+    ids->push_back(t2i.at(s));
   }
-};
+}
+
+std::string decode(const std::vector<int>& ids,
+                   const std::unordered_map<wchar_t, uint8_t>& u2b,
+                   const std::unordered_map<int, std::string>& i2t) {
+  std::string concat;
+  for (int id : ids) {
+    concat += i2t.at(id);
+  }
+
+  std::wstring w = utf8_to_wstring(concat);
+  std::string r;
+  for (wchar_t c : w) {
+    r.push_back(char(u2b.at(c)));
+  }
+  return r;
+}

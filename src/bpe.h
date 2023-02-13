@@ -22,7 +22,7 @@ void bytes_to_unicode(std::unordered_map<uint8_t, wchar_t>* b2u,
                       std::unordered_map<wchar_t, uint8_t>* u2b);
 
 void byte_encode_token(const std::string& token,
-                       std::unordered_map<uint8_t, wchar_t>& b2u,
+                       const std::unordered_map<uint8_t, wchar_t>& b2u,
                        std::wstring* result);
 
 // hash_pair_wstring is used in BPERanks to make a pair of wstrings
@@ -46,14 +46,21 @@ void load_merge_rules(std::istream& ins, BPERanks* bpe_ranks);
 void get_pairs(const std::wstring& word,
                std::vector<std::pair<std::wstring, std::wstring> >* pairs);
 
-void bpe(const std::wstring& token, BPERanks& bpe_ranks,
+void bpe(const std::wstring& token, const BPERanks& bpe_ranks,
          std::vector<std::wstring>* result);
 
 void tokenize(const std::string& text, RE2& re, BPERanks& bpe_ranks,
-              std::unordered_map<uint8_t, wchar_t>& b2u,
+              const std::unordered_map<uint8_t, wchar_t>& b2u,
               std::vector<std::string>* result);
 
 void load_vocab(std::istream& ins, std::unordered_map<std::string, int>* t2i,
                 std::unordered_map<int, std::string>* i2t);
+void encode(const std::string& text, RE2& re, BPERanks& bpe_ranks,
+            std::unordered_map<uint8_t, wchar_t>& b2u,
+            const std::unordered_map<std::string, int>& t2i,
+            std::vector<int>* ids);
+std::string decode(const std::vector<int>& ids,
+                   const std::unordered_map<wchar_t, uint8_t>& u2b,
+                   const std::unordered_map<int, std::string>& i2t);
 
 #endif  // HUGGINGFACE_TRANSFORMERS_TOKENIZER_GPT2_BPE
