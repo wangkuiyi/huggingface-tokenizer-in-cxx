@@ -17,10 +17,12 @@
 		187AFC962999E822007E357F /* re2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187AFC952999E822007E357F /* re2.xcframework */; };
 		187AFC982999E947007E357F /* use_re2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187AFC972999E947007E357F /* use_re2.cpp */; };
 		187AFC9A2999F069007E357F /* tokenizer.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187AFC992999F069007E357F /* tokenizer.xcframework */; };
+		187AFC9C2999F2ED007E357F /* merges.txt in Resources */ = {isa = PBXBuildFile; fileRef = 187AFC9B2999F2ED007E357F /* merges.txt */; };
+		187AFC9E2999F2F7007E357F /* vocab.txt in Resources */ = {isa = PBXBuildFile; fileRef = 187AFC9D2999F2F7007E357F /* vocab.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		187AFC792999E7F7007E357F /* RE2Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RE2Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		187AFC792999E7F7007E357F /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		187AFC7C2999E7F7007E357F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		187AFC7D2999E7F7007E357F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		187AFC7F2999E7F7007E357F /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
@@ -35,6 +37,8 @@
 		187AFC952999E822007E357F /* re2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = re2.xcframework; path = ../../build/re2/re2.xcframework; sourceTree = "<group>"; };
 		187AFC972999E947007E357F /* use_re2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = use_re2.cpp; sourceTree = "<group>"; };
 		187AFC992999F069007E357F /* tokenizer.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = tokenizer.xcframework; path = ../../build/tokenizer.xcframework; sourceTree = "<group>"; };
+		187AFC9B2999F2ED007E357F /* merges.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = merges.txt; sourceTree = "<group>"; };
+		187AFC9D2999F2F7007E357F /* vocab.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vocab.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +57,7 @@
 		187AFC702999E7F7007E357F = {
 			isa = PBXGroup;
 			children = (
-				187AFC7B2999E7F7007E357F /* RE2Sample */,
+				187AFC7B2999E7F7007E357F /* SampleApp */,
 				187AFC7A2999E7F7007E357F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,12 +65,12 @@
 		187AFC7A2999E7F7007E357F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				187AFC792999E7F7007E357F /* RE2Sample.app */,
+				187AFC792999E7F7007E357F /* SampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		187AFC7B2999E7F7007E357F /* RE2Sample */ = {
+		187AFC7B2999E7F7007E357F /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
 				187AFC7C2999E7F7007E357F /* AppDelegate.h */,
@@ -83,16 +87,18 @@
 				187AFC8E2999E7F8007E357F /* main.m */,
 				187AFC952999E822007E357F /* re2.xcframework */,
 				187AFC992999F069007E357F /* tokenizer.xcframework */,
+				187AFC9B2999F2ED007E357F /* merges.txt */,
+				187AFC9D2999F2F7007E357F /* vocab.txt */,
 			);
-			path = RE2Sample;
+			path = SampleApp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		187AFC782999E7F7007E357F /* RE2Sample */ = {
+		187AFC782999E7F7007E357F /* SampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 187AFC922999E7F8007E357F /* Build configuration list for PBXNativeTarget "RE2Sample" */;
+			buildConfigurationList = 187AFC922999E7F8007E357F /* Build configuration list for PBXNativeTarget "SampleApp" */;
 			buildPhases = (
 				187AFC752999E7F7007E357F /* Sources */,
 				187AFC762999E7F7007E357F /* Frameworks */,
@@ -102,9 +108,9 @@
 			);
 			dependencies = (
 			);
-			name = RE2Sample;
-			productName = RE2Sample;
-			productReference = 187AFC792999E7F7007E357F /* RE2Sample.app */;
+			name = SampleApp;
+			productName = SampleApp;
+			productReference = 187AFC792999E7F7007E357F /* SampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -121,7 +127,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 187AFC742999E7F7007E357F /* Build configuration list for PBXProject "RE2Sample" */;
+			buildConfigurationList = 187AFC742999E7F7007E357F /* Build configuration list for PBXProject "SampleApp" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -134,7 +140,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				187AFC782999E7F7007E357F /* RE2Sample */,
+				187AFC782999E7F7007E357F /* SampleApp */,
 			);
 		};
 /* End PBXProject section */
@@ -144,9 +150,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				187AFC9E2999F2F7007E357F /* vocab.txt in Resources */,
 				187AFC8C2999E7F8007E357F /* LaunchScreen.storyboard in Resources */,
 				187AFC892999E7F8007E357F /* Assets.xcassets in Resources */,
 				187AFC872999E7F7007E357F /* Main.storyboard in Resources */,
+				187AFC9C2999F2ED007E357F /* merges.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,7 +314,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ET66P5RYW9;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RE2Sample/Info.plist;
+				INFOPLIST_FILE = SampleApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -317,7 +325,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.wyi.RE2Sample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.wyi.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -333,7 +341,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ET66P5RYW9;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RE2Sample/Info.plist;
+				INFOPLIST_FILE = SampleApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -344,7 +352,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.wyi.RE2Sample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.wyi.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -354,7 +362,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		187AFC742999E7F7007E357F /* Build configuration list for PBXProject "RE2Sample" */ = {
+		187AFC742999E7F7007E357F /* Build configuration list for PBXProject "SampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				187AFC902999E7F8007E357F /* Debug */,
@@ -363,7 +371,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		187AFC922999E7F8007E357F /* Build configuration list for PBXNativeTarget "RE2Sample" */ = {
+		187AFC922999E7F8007E357F /* Build configuration list for PBXNativeTarget "SampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				187AFC932999E7F8007E357F /* Debug */,
