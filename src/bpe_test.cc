@@ -1,9 +1,10 @@
 #include "bpe.h"
 
+RE2 re(
+    "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
+    "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
+
 void test_re2() {
-  RE2 re(
-      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   std::string w;
@@ -80,9 +81,6 @@ auto _print_string_vec = [](std::vector<std::string>& v) {
 };
 
 void test_tokenize() {
-  RE2 re(
-      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   BPERanks bpe_ranks;
@@ -104,9 +102,6 @@ void test_tokenize() {
 }
 
 void test_tokenize_regression() {
-  RE2 re(
-      "('s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| "
-      "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
   assert(re.ok());  // compiled; if not, see re.error();
 
   BPERanks bpe_ranks;
@@ -133,6 +128,43 @@ void test_tokenize_regression() {
   }
 }
 
+void test_load_vocab() {
+  std::unordered_map<std::string, int> t2i;
+  std::unordered_map<int, std::string> i2t;
+  std::fstream vocab_txt("/tmp/vocab.txt", std::ios::in);
+  load_vocab(vocab_txt, &t2i, &i2t);
+  assert(t2i.size() == 50257);
+  assert(i2t.size() == 50257);
+  assert(t2i["\""] == 1);
+  assert(i2t[1] == "\"");
+}
+
+void test_encode_decode() {
+  BPERanks bpe_ranks;
+  std::fstream merges("/tmp/merges.txt", std::ios::in);
+  load_merge_rules(merges, &bpe_ranks);
+
+  std::unordered_map<uint8_t, wchar_t> b2u;
+  std::unordered_map<wchar_t, uint8_t> u2b;
+  bytes_to_unicode(&b2u, &u2b);
+
+  std::unordered_map<std::string, int> t2i;
+  std::unordered_map<int, std::string> i2t;
+  std::fstream vocab_txt("/tmp/vocab.txt", std::ios::in);
+  load_vocab(vocab_txt, &t2i, &i2t);
+
+  std::vector<std::string> candidates = {
+      "this is <|endoftext|> else<|endoftext|>",
+      "<|endoftext|> else<|endoftext|>", "this is <|endoftext|> else",
+      "this is <|endoftext|>else", "this is else"};
+  for (auto s : candidates) {
+    std::vector<int> ids;
+    encode(s, re, bpe_ranks, b2u, t2i, &ids);
+    assert(ids.size() > 0);
+    assert(decode(ids, u2b, i2t) == s);
+  }
+}
+
 int main() {
   test_bytes_to_unicode();
   test_re2();
@@ -141,5 +173,7 @@ int main() {
   test_get_pairs();
   test_bpe();
   test_tokenize();
+  test_load_vocab();
+  test_encode_decode();
   return 0;
 }

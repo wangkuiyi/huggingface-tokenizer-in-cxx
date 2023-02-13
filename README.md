@@ -17,6 +17,12 @@ curl -L https://huggingface.co/gpt2/raw/main/merges.txt -o /tmp/merges.txt
 curl -L https://huggingface.co/gpt2/raw/main/vocab.json -o /tmp/vocab.json
 ```
 
+We need to convert the vocabulary file from JSON into a plain text file, so our C++ code does not depend on any JSON parser.
+
+```bash
+python tool/json-to-txt.py /tmp/vocab.json > /tmp/vocab.txt
+```
+
 To run HuggingFace vanilla BPE tokenzier for GPT2, run the following commands:
 
 ```bash
