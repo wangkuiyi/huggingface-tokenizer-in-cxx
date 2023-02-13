@@ -14,6 +14,8 @@
 		187AFC892999E7F8007E357F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187AFC882999E7F8007E357F /* Assets.xcassets */; };
 		187AFC8C2999E7F8007E357F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 187AFC8A2999E7F8007E357F /* LaunchScreen.storyboard */; };
 		187AFC8F2999E7F8007E357F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 187AFC8E2999E7F8007E357F /* main.m */; };
+		187AFC962999E822007E357F /* re2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187AFC952999E822007E357F /* re2.xcframework */; };
+		187AFC982999E947007E357F /* use_re2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187AFC972999E947007E357F /* use_re2.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		187AFC8B2999E7F8007E357F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		187AFC8D2999E7F8007E357F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		187AFC8E2999E7F8007E357F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		187AFC952999E822007E357F /* re2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = re2.xcframework; path = ../../build/re2/re2.xcframework; sourceTree = "<group>"; };
+		187AFC972999E947007E357F /* use_re2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = use_re2.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				187AFC962999E822007E357F /* re2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,11 +72,13 @@
 				187AFC802999E7F7007E357F /* SceneDelegate.m */,
 				187AFC822999E7F7007E357F /* ViewController.h */,
 				187AFC832999E7F7007E357F /* ViewController.m */,
+				187AFC972999E947007E357F /* use_re2.cpp */,
 				187AFC852999E7F7007E357F /* Main.storyboard */,
 				187AFC882999E7F8007E357F /* Assets.xcassets */,
 				187AFC8A2999E7F8007E357F /* LaunchScreen.storyboard */,
 				187AFC8D2999E7F8007E357F /* Info.plist */,
 				187AFC8E2999E7F8007E357F /* main.m */,
+				187AFC952999E822007E357F /* re2.xcframework */,
 			);
 			path = RE2Sample;
 			sourceTree = "<group>";
@@ -146,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				187AFC982999E947007E357F /* use_re2.cpp in Sources */,
 				187AFC842999E7F7007E357F /* ViewController.m in Sources */,
 				187AFC7E2999E7F7007E357F /* AppDelegate.m in Sources */,
 				187AFC8F2999E7F8007E357F /* main.m in Sources */,
