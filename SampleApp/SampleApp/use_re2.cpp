@@ -20,7 +20,7 @@ extern "C" void test_tokenizer(const char* merges_path,
       "?[^\\s\\p{L}\\p{N}]+|\\s+\\(?!\\S\\)|\\s+)");
 
   BPERanks bpe_ranks;
-  std::fstream merges("/tmp/merges.txt", std::ios::in);
+  std::fstream merges(merges_path, std::ios::in);
   load_merge_rules(merges, &bpe_ranks);
 
   std::unordered_map<uint8_t, wchar_t> b2u;
@@ -29,7 +29,7 @@ extern "C" void test_tokenizer(const char* merges_path,
 
   std::unordered_map<std::string, int> t2i;
   std::unordered_map<int, std::string> i2t;
-  std::fstream vocab_txt("/tmp/vocab.txt", std::ios::in);
+  std::fstream vocab_txt(vocab_path, std::ios::in);
   load_vocab(vocab_txt, &t2i, &i2t);
 
   std::vector<std::string> candidates = {
@@ -42,4 +42,5 @@ extern "C" void test_tokenizer(const char* merges_path,
     assert(ids.size() > 0);
     assert(decode(ids, u2b, i2t) == s);
   }
+  std::cout << "Passed testing";
 }
