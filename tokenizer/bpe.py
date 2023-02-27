@@ -1,6 +1,6 @@
 import regex as re
 import json
-
+import os
 
 def bytes_to_unicode():
     bs = (
@@ -34,14 +34,14 @@ def get_pairs(word):
 
 
 class Tokenizer:
-    def __init__(self):
+    def __init__(self, assert_dir:str):
         self.unk_token = "<|unknown token|>"
 
         self.pat = re.compile(
             r"""'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"""
         )
 
-        with open("/tmp/vocab.json", encoding="utf-8") as vocab_handle:
+        with open(os.path.join(assert_dir, "vocab.json"), encoding="utf-8") as vocab_handle:
             self.encoder = json.load(vocab_handle)
         self.decoder = {v: k for k, v in self.encoder.items()}
 
@@ -49,7 +49,7 @@ class Tokenizer:
         self.byte_decoder = {v: k for k, v in self.byte_encoder.items()}
 
         self.cache = {}
-        with open("/tmp/merges.txt", encoding="utf-8") as merges_handle:
+        with open(os.path.join(assert_dir,"merges.txt"), encoding="utf-8") as merges_handle:
             bpe_merges = merges_handle.read().split("\n")[1:-1]
         bpe_merges = [tuple(merge.split()) for merge in bpe_merges]
         self.bpe_ranks = dict(zip(bpe_merges, range(len(bpe_merges))))
@@ -127,19 +127,18 @@ class Tokenizer:
         return bytearray(self.byte_decoder[c] for c in text).decode('utf-8')
 
 
-
-t = Tokenizer()
-# with open("/tmp/sample.txt") as f:
-#     for line in f:
-#         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
-#         print(*lst, sep=', ') # Do no quote strings.
-
-candidates = [
-    "this is <|endoftext|> else<|endoftext|>",
-    "<|endoftext|> else<|endoftext|>",
-    "this is <|endoftext|> else",
-    "this is <|endoftext|>else",
-    "this is else",
-]
-for s in candidates:
-    assert t.decode(t.encode(s)) == s
+def test_tokenizer():
+    t = Tokenizer()
+    # with open("/tmp/sample.txt") as f:
+    #     for line in f:
+    #         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
+    #         print(*lst, sep=', ') # Do no quote strings.
+    candidates = [
+        "this is <|endoftext|> else<|endoftext|>",
+        "<|endoftext|> else<|endoftext|>",
+        "this is <|endoftext|> else",
+        "this is <|endoftext|>else",
+        "this is else",
+    ]
+    for s in candidates:
+        assert t.decode(t.encode(s)) == s
