@@ -1,6 +1,4 @@
 *~
-assets/
-vocab.cc
 build-*/
 .DS_Store
 build/
