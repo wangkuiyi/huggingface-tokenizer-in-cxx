@@ -2,6 +2,7 @@ import regex as re
 import json
 import os
 
+
 def bytes_to_unicode():
     bs = (
         list(range(ord("!"), ord("~") + 1))
@@ -34,23 +35,23 @@ def get_pairs(word):
 
 
 class Tokenizer:
-    def __init__(self, assert_dir:str):
+    def __init__(self, assert_dir: str):
         self.unk_token = "<|unknown token|>"
 
         self.pat = re.compile(
             r"""'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"""
         )
 
-        with open(os.path.join(assert_dir, "vocab.json"), encoding="utf-8") as vocab_handle:
-            self.encoder = json.load(vocab_handle)
+        with open(os.path.join(assert_dir, "vocab.json"), encoding="utf-8") as f:
+            self.encoder = json.load(f)
         self.decoder = {v: k for k, v in self.encoder.items()}
 
         self.byte_encoder = bytes_to_unicode()
         self.byte_decoder = {v: k for k, v in self.byte_encoder.items()}
 
         self.cache = {}
-        with open(os.path.join(assert_dir,"merges.txt"), encoding="utf-8") as merges_handle:
-            bpe_merges = merges_handle.read().split("\n")[1:-1]
+        with open(os.path.join(assert_dir, "merges.txt"), encoding="utf-8") as f:
+            bpe_merges = f.read().split("\n")[1:-1]
         bpe_merges = [tuple(merge.split()) for merge in bpe_merges]
         self.bpe_ranks = dict(zip(bpe_merges, range(len(bpe_merges))))
 
@@ -123,12 +124,12 @@ class Tokenizer:
         return [self.encoder[token] for token in self.tokenize(text)]
 
     def decode(self, indices):
-        text = ''.join([self.decoder.get(index) for index in indices])
-        return bytearray(self.byte_decoder[c] for c in text).decode('utf-8')
+        text = "".join([self.decoder.get(index) for index in indices])
+        return bytearray(self.byte_decoder[c] for c in text).decode("utf-8")
 
 
 def test_tokenizer():
-    t = Tokenizer()
+    t = Tokenizer(os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets"))
     # with open("/tmp/sample.txt") as f:
     #     for line in f:
     #         lst = t._tokenize(line[:-1]) # Remove the trailing '\n'.
@@ -142,3 +143,7 @@ def test_tokenizer():
     ]
     for s in candidates:
         assert t.decode(t.encode(s)) == s
+
+
+if __name__ == "__main__":
+    test_tokenizer()
