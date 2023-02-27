@@ -10,18 +10,7 @@ The following tech notes might help you understand the Python and C++ code:
 1. [Understanding HuggingFace Tokenizers](doc/0.md)
 1. [Unicode-enabled Regular Expression in C++](doc/1.md)
 
-Make sure you download the vocabulary file and the BPE merge rules from HuggingFace so you can run the programs.
-
-```bash
-curl -L https://huggingface.co/gpt2/raw/main/merges.txt -o /tmp/merges.txt
-curl -L https://huggingface.co/gpt2/raw/main/vocab.json -o /tmp/vocab.json
-```
-
-We need to convert the vocabulary file from JSON into a plain text file, so our C++ code does not depend on any JSON parser.
-
-```bash
-python tool/json-to-txt.py /tmp/vocab.json > /tmp/vocab.txt
-```
+To run the vanilla HuggingFace GPT-2's BPE tokenizer, follow [this link])https://huggingface.co/docs/transformers/model_doc/gpt2#transformers.GPT2Tokenizer).
 
 To run HuggingFace vanilla BPE tokenzier for GPT2, run the following commands:
 
@@ -33,7 +22,7 @@ python tool/t.py
 Please run the following commands to run the extracted 120-line Python tokenizer:
 
 ```bash
-python bpe.py
+python tokenizer/bpe.py
 ```
 
 To build the C++ port, you will need CMake.
